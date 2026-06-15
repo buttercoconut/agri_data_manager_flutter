@@ -1,17 +1,16 @@
 from pydantic import BaseModel
 from datetime import datetime
-from typing import Optional
 
-class CropBase(BaseModel):
-    name: str
-    variety: str
-    planting_date: datetime
+class SoilBase(BaseModel):
     field_location: str
+    ph: float
+    moisture: float
+    nutrients: str
 
-class CropCreate(CropBase):
+class SoilCreate(SoilBase):
     pass
 
-class Crop(CropBase):
+class Soil(SoilBase):
     id: int
     last_updated: datetime
 

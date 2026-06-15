@@ -1,24 +1,31 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from app.routes import crop, user
+# Import routers
+from app.routes.user import router as user_router
+from app.routes.crop import router as crop_router
+from app.routes.soil import router as soil_router
+from app.routes.weather import router as weather_router
+from app.routes.community import router as community_router
 
 app = FastAPI(title="Agri Data Manager API")
 
-# CORS 설정 (모바일 앱과 통신을 위해)
+# CORS for Flutter frontend
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # 실제 배포 시에는 도메인 제한
+    allow_origins=["*"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
-# 라우터 등록
-app.include_router(user.router, prefix="/users", tags=["users"])
-app.include_router(crop.router, prefix="/crops", tags=["crops"])
+# Include routers
+app.include_router(user_router, prefix="/users", tags=["users"])
+app.include_router(crop_router, prefix="/crops", tags=["crops"])
+app.include_router(soil_router, prefix="/soil", tags=["soil"])
+app.include_router(weather_router, prefix="/weather", tags=["weather"])
+app.include_router(community_router, prefix="/community", tags=["community"])
 
-# Health check
-@app.get("/health")
-async def health_check():
-    return {"status": "ok"}
+@app.get("/")
+async def root():
+    return {"message": "Welcome to Agri Data Manager API"}

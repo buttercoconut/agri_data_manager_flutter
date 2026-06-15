@@ -1,15 +1,16 @@
-from datetime import datetime
-from typing import List
+from sqlalchemy.orm import Session
+from app.models.crop import Crop, CropCreate
 
-# 서비스 레이어 예시: CropService
 class CropService:
-    def __init__(self, db_session):
-        self.db = db_session
+    def __init__(self, db: Session):
+        self.db = db
 
-    async def get_all_crops(self):
-        # 실제 ORM 호출 필요
-        return []
+    def create_crop(self, crop_in: CropCreate) -> Crop:
+        crop = Crop(**crop_in.dict())
+        self.db.add(crop)
+        self.db.commit()
+        self.db.refresh(crop)
+        return crop
 
-    async def create_crop(self, crop_in):
-        # 실제 DB 저장 로직
-        return crop_in
+    def get_all_crops(self) -> list[Crop]:
+        return self.db.query(Crop).all()
